@@ -1,0 +1,8 @@
+name: PersistentData
+version: '${project.version}'
+main: net.dominionserver.persistentdata.PersistentData
+api-version: 1.15
+prefix: PD
+authors: [ DominionServer, Lord_Bones ]
+description: Writes to and reads from files to make them Persistent between restarts.
+website: https://dominionserver.net
