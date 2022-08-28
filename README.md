@@ -7,7 +7,34 @@ It also ensures that when one refers to persistent data everyone knows what this
 # How to use
 
 ## Top level - Persistent Data
-This is unfinished.
+Persistent Data is the top level and outside of creation is completely devoid of the type of the file.
+As such it handles more exceptions.
+
+### GetDocumentLocation
+Returns the document location for reference.
+
+### GetPathSeparator
+The Separator within the sectioned File (set by the type) which separates the sections.
+So `section1.section2.data = hello` this would ensure two sections exist and then in location data
+sets the string hello as the fullstops in this instance are Separators.
+
+### ReadData
+Reads **locally cached** data within the file. Throws AttributeNotFoundException for several errors.
+* If the location does not exist
+* If the location is a section not a data location
+
+### WriteData
+Writes data into the **cached** data within the file. Will create the path given if it does not
+exist (does not fail).
+
+```⚠️ Will override a data structure or section with another. This never fails so be sure you are writing to the correct locations!```
+
+### Save
+Writes all Cached data to the actual file. May throw IOException if the File does not exist/cannot write.
+
+### ReloadFromFile
+Reads from file into Cached data. May throw IOException if the File does not exist/cannot read.
+May throw InvalidConfigurationException if the file is an invalid format.
 
 ## Sub-level - Sectioned File
 Sectioned file should not be used unless you would like to not have the default implementation from

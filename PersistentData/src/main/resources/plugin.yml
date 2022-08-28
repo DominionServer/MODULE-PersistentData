@@ -1,6 +1,6 @@
 name: PersistentData
 version: '${project.version}'
-main: net.dominionserver.persistentdata.PersistentData
+main: net.dominionserver.persistentdata.command.TestCommand
 api-version: 1.15
 prefix: PD
 authors: [ DominionServer, Lord_Bones ]

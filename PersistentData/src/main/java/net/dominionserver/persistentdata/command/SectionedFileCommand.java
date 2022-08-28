@@ -1,4 +1,4 @@
-package net.dominionserver.persistentdata.testcommand;
+package net.dominionserver.persistentdata.command;
 
 import net.dominionserver.persistentdata.filemanagement.FileTypeFactory;
 import net.dominionserver.persistentdata.filemanagement.ISectionedFile;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
 
-public class Frontfacingcommand implements CommandExecutor
+public class SectionedFileCommand implements CommandExecutor
 {
     /**
      * Test file for the persistent data test command
@@ -24,7 +24,7 @@ public class Frontfacingcommand implements CommandExecutor
      */
     public final String documentLocation = "testdocument.yml";
 
-    public Frontfacingcommand()
+    public SectionedFileCommand()
     {
         yamlTestFile = new YAMLFile(documentLocation, new FileTypeFactory());
     }
@@ -37,7 +37,6 @@ public class Frontfacingcommand implements CommandExecutor
         {
             commandSent = true;
             Player player = (Player) sender;
-            EnsureNotNull(player);
 
             switch(args[0])
             {
@@ -168,18 +167,5 @@ public class Frontfacingcommand implements CommandExecutor
         }
 
         return answer;
-    }
-
-    /**
-     * Ensures the file is loaded and lets the player know if it is not
-     * @param player Player who sent the command
-     */
-    private void EnsureNotNull(Player player)
-    {
-        if(yamlTestFile == null)
-        {
-            player.sendMessage("File loaded was null...");
-            yamlTestFile = new YAMLFile(documentLocation, new FileTypeFactory());
-        }
     }
 }
