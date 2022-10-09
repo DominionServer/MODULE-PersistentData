@@ -1,14 +1,13 @@
-package net.dominionserver.persistentdata.command;
+package net.phonographman.persistentdata.command;
 
-import net.dominionserver.persistentdata.IPersistentData;
-import net.dominionserver.persistentdata.PersistentData;
-import net.dominionserver.persistentdata.filemanagement.FileTypeFactory;
-import net.dominionserver.persistentdata.filemanagement.ISectionedFile;
-import net.dominionserver.persistentdata.filemanagement.YAMLFile;
+import net.phonographman.persistentdata.IPersistentData;
+import net.phonographman.persistentdata.PersistentData;
+import net.phonographman.persistentdata.filemanagement.FileTypeFactory;
+import net.phonographman.persistentdata.filemanagement.ISectionedFile;
+import net.phonographman.persistentdata.filemanagement.YAMLFile;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 
 import javax.management.AttributeNotFoundException;

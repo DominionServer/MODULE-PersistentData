@@ -1,16 +1,10 @@
-package net.dominionserver.persistentdata.filemanagement;
+package net.phonographman.persistentdata.filemanagement;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.NullArgumentException;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import javax.management.AttributeNotFoundException;
-import javax.naming.NameNotFoundException;
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.HashMap;
 
 public class YAMLFile implements ISectionedFile
 {

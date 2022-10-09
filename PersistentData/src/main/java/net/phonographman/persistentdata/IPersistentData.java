@@ -1,4 +1,4 @@
-package net.dominionserver.persistentdata;
+package net.phonographman.persistentdata;
 
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;

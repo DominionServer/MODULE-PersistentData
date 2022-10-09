@@ -1,4 +1,4 @@
-package net.dominionserver.persistentdata.command;
+package net.phonographman.persistentdata.command;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

@@ -1,6 +1,5 @@
-package net.dominionserver.persistentdata.filemanagement;
+package net.phonographman.persistentdata.filemanagement;
 
-import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.io.IOException;
