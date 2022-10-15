@@ -44,6 +44,9 @@ public class YAMLFile implements ISectionedFile
         }
         this.yamlConfiguration = fileTypeFactory.GetYamlFile();
 
+        // Ensure a logger is setup
+        this.logger = Bukkit.getLogger();
+
         this.fileInterface = fileTypeFactory.GetFileInterface(documentLocation);
         LoadFileIfNotFound(documentLocation);
     }
