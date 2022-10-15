@@ -17,4 +17,9 @@ public interface IFileInterface
      * Creates a new file.
      */
     void CreateNewFile() throws IOException;
+
+    /**
+     * Creates all the directories for the given path
+     */
+    void CreateDirectoriesForFileLocation();
 }

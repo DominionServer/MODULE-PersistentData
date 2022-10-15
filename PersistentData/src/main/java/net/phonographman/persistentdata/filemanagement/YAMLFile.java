@@ -1,10 +1,12 @@
 package net.phonographman.persistentdata.filemanagement;
 
 import org.apache.commons.lang.NullArgumentException;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class YAMLFile implements ISectionedFile
 {
@@ -23,6 +25,11 @@ public class YAMLFile implements ISectionedFile
      */
     private IFileInterface fileInterface;
 
+    /**
+     * Logs messages and info to the console
+     */
+    private Logger logger;
+
     public YAMLFile(String documentLocation, IFileTypeFactory fileTypeFactory)
     {
         if(documentLocation == null)
@@ -39,6 +46,31 @@ public class YAMLFile implements ISectionedFile
 
         this.fileInterface = fileTypeFactory.GetFileInterface(documentLocation);
         LoadFileIfNotFound(documentLocation);
+    }
+
+    public YAMLFile(String documentLocation, IFileTypeFactory fileTypeFactory, Logger logger)
+    {
+        if(documentLocation == null)
+        {
+            throw new NullArgumentException(YAMLFile.class.getName() + ".documentLocation");
+        }
+        this.documentLocation = documentLocation;
+
+        if(fileTypeFactory == null)
+        {
+            throw new NullArgumentException(YAMLFile.class.getName() + ".fileTypeFactory");
+        }
+        this.yamlConfiguration = fileTypeFactory.GetYamlFile();
+
+        if(logger == null)
+        {
+            throw new NullArgumentException(YAMLFile.class.getName() + ".logger");
+        }
+        this.logger = logger;
+
+        this.fileInterface = fileTypeFactory.GetFileInterface(documentLocation);
+        LoadFileIfNotFound(documentLocation);
+
     }
 
     @Override
@@ -123,6 +155,10 @@ public class YAMLFile implements ISectionedFile
         {
             try
             {
+                this.logger.info(
+                        "[PM][PD] File does not exist. Creating directories for: " + this.documentLocation);
+                this.fileInterface.CreateDirectoriesForFileLocation();
+
                 this.fileInterface.CreateNewFile();
                 this.yamlConfiguration.LoadFile(documentLocation);
             }

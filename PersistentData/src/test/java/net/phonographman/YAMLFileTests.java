@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Logger;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,12 +25,15 @@ public class YAMLFileTests
     private IFileInterface mockFileInterface;
     private ISectionedFile testClass;
 
+    private Logger mockLogger;
+
     @BeforeEach
     public void SetUp()
     {
         mockFileTypeFactory = createNiceMock(IFileTypeFactory.class);
         mockYamlConfiguration = createNiceMock(IYamlConfiguration.class);
         mockFileInterface = createNiceMock(IFileInterface.class);
+        mockLogger = new EmptyLogger();
         replay(mockFileInterface);
         expect(mockFileTypeFactory.GetYamlFile()).andReturn(mockYamlConfiguration);
         expect(mockFileTypeFactory.GetFileInterface(anyString())).andReturn(mockFileInterface);
@@ -59,10 +63,40 @@ public class YAMLFileTests
     }
 
     @Test
+    public void OnConstructionWithLogger_ThrowsArgumentNullException_WhenYAMLConfigurationIsNullTest()
+    {
+        // Arrange Act Assert
+        Exception exception = assertThrows(NullArgumentException.class, () ->
+        {
+            new YAMLFile(mockDocumentLocation, (IFileTypeFactory)null, mockLogger);
+        });
+    }
+
+    @Test
+    public void OnConstructionWithLogger_ThrowsArgumentNullException_WhenNullTest()
+    {
+        // Arrange Act Assert
+        Exception exception = assertThrows(NullArgumentException.class, () ->
+        {
+            testClass = new YAMLFile((String)null, mockFileTypeFactory, mockLogger);
+        });
+    }
+
+    @Test
+    public void OnConstruction_ThrowsArgumentNullException_WhenLoggerIsNullTest()
+    {
+        // Arrange Act Assert
+        Exception exception = assertThrows(NullArgumentException.class, () ->
+        {
+            testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, null);
+        });
+    }
+
+    @Test
     public void GetDocumentLocation_ReturnsTheDocumentPath_WhenCalledTest()
     {
         // Arrange
-        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, mockLogger);
 
         // Act
         String result = this.testClass.GetDocumentLocation();
@@ -80,7 +114,7 @@ public class YAMLFileTests
         expect(mockYamlConfiguration.LoadFile(mockDocumentLocation)).andReturn(true);
         replay(mockYamlConfiguration);
 
-        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, mockLogger);
 
         // Act Assert
         Exception exception = assertThrows(javax.management.AttributeNotFoundException.class, () ->
@@ -101,7 +135,7 @@ public class YAMLFileTests
         expect(mockYamlConfiguration.GetData(testLocation)).andReturn(testAnswer);
         replay(mockYamlConfiguration);
 
-        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, mockLogger);
 
         // Act
         boolean result = !testAnswer;
@@ -130,7 +164,7 @@ public class YAMLFileTests
                 .andReturn(true);
         replay(mockYamlConfiguration);
 
-        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, mockLogger);
 
         // Act Assert
         Exception exception = assertThrows(javax.management.AttributeNotFoundException.class, () ->
@@ -167,7 +201,7 @@ public class YAMLFileTests
         }).anyTimes();
         replay(mockYamlConfiguration);
 
-        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, mockLogger);
 
         // Act
         int readData = defaultAnswer;
@@ -213,7 +247,7 @@ public class YAMLFileTests
         }).anyTimes();
         replay(mockYamlConfiguration);
 
-        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, mockLogger);
 
         // Act
         int readData = defaultAnswer;
@@ -242,7 +276,7 @@ public class YAMLFileTests
 
         replay(mockYamlConfiguration);
 
-        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, mockLogger);
 
         // Act
         char actualSeparator = testClass.GetPathSeparator();
@@ -262,7 +296,7 @@ public class YAMLFileTests
                 .andThrow(new IllegalArgumentException("Some exception message"));
         replay(mockYamlConfiguration);
 
-        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, mockLogger);
 
         // Act Assert
         Exception exception = assertThrows(AttributeNotFoundException.class, () ->
@@ -304,10 +338,40 @@ public class YAMLFileTests
         replay(mockFile);
 
         // Act
-        testClass = new YAMLFile(mockDocumentLocation, mockFileFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileFactory, mockLogger);
 
         // Assert
         Assert.assertTrue((boolean) haveCreatedFile.get());
+    }
+
+    @Test
+    public void OnConstruction_DirectoriesForConfigurationAreCreated_WhenFileDoesNotExistTests()
+    {
+        IFileTypeFactory mockFileFactory = createNiceMock(IFileTypeFactory.class);
+        IFileInterface mockFile = createNiceMock(IFileInterface.class);
+
+        // Arrange
+        expect(mockFileFactory.GetYamlFile()).andReturn(mockYamlConfiguration);
+        expect(mockFileFactory.GetFileInterface(anyString())).andReturn(mockFile);
+        replay(mockFileFactory);
+
+        expect(mockFile.FileExists()).andReturn(false);
+
+        AtomicReference haveCreatedFile = new AtomicReference(false);
+        mockFile.CreateDirectoriesForFileLocation();
+        expectLastCall().andAnswer(() -> {
+                haveCreatedFile.set(true);
+
+                return new Object();
+        }).anyTimes();
+
+        replay(mockFile);
+
+        // Act
+        testClass = new YAMLFile(mockDocumentLocation, mockFileFactory, mockLogger);
+
+        // Assert
+        Assert.assertTrue("Did not create directories", (boolean) haveCreatedFile.get());
     }
 
     @Test
@@ -343,7 +407,7 @@ public class YAMLFileTests
         replay(mockFile);
 
         // Act
-        testClass = new YAMLFile(mockDocumentLocation, mockFileFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileFactory, mockLogger);
 
         // Assert
         Assert.assertFalse((boolean) haveCreatedFile.get());
@@ -376,7 +440,7 @@ public class YAMLFileTests
 
         replay(mockYamlConfiguration);
 
-        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, mockLogger);
 
         // Act
         try
@@ -415,7 +479,7 @@ public class YAMLFileTests
         }
         replay(mockYamlConfiguration);
 
-        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, mockLogger);
 
         // Act
         Exception exception = assertThrows(IOException.class, () ->
@@ -451,7 +515,7 @@ public class YAMLFileTests
 
         replay(mockYamlConfiguration);
 
-        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, mockLogger);
 
         // Act
         try
@@ -490,7 +554,7 @@ public class YAMLFileTests
         }
         replay(mockYamlConfiguration);
 
-        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, mockLogger);
 
         // Act
         Exception exception = assertThrows(IOException.class, () ->
@@ -522,7 +586,7 @@ public class YAMLFileTests
         }
         replay(mockYamlConfiguration);
 
-        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory);
+        testClass = new YAMLFile(mockDocumentLocation, mockFileTypeFactory, mockLogger);
 
         // Act
         Exception exception = assertThrows(InvalidConfigurationException.class, () ->
