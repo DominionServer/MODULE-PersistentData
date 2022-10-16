@@ -2,6 +2,7 @@ package net.phonographman.persistentdata;
 
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Stores data persistently so that it may remain through restarts.
@@ -45,4 +46,11 @@ public interface IPersistentData
      * Reloads data from file into the persistent data
      */
     void ReloadFromFile();
+
+    /**
+     * Gets the section names within the given section
+     * @param location A section location
+     * @return A list of the section names
+     */
+    List<String> GetSectionNames(String location);
 }

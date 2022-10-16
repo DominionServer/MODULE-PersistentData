@@ -5,6 +5,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class YamlConfigurationInterface implements IYamlConfiguration
 {
@@ -30,7 +32,7 @@ public class YamlConfigurationInterface implements IYamlConfiguration
 
             foundFile = true;
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             // The boolean is not set if this fails
         }
@@ -57,9 +59,9 @@ public class YamlConfigurationInterface implements IYamlConfiguration
     }
 
     @Override
-    public <Object>Object GetData(String location)
+    public <Object> Object GetData(String location)
     {
-        return (Object)this.yamlConfigurationFile.get(location);
+        return (Object) this.yamlConfigurationFile.get(location);
     }
 
     public boolean ContainsLocation(String location)
@@ -68,7 +70,7 @@ public class YamlConfigurationInterface implements IYamlConfiguration
     }
 
     @Override
-    public <Object>void SetData(String location, Object newData)
+    public <Object> void SetData(String location, Object newData)
     {
         this.yamlConfigurationFile.set(location, newData);
     }
@@ -77,5 +79,18 @@ public class YamlConfigurationInterface implements IYamlConfiguration
     public boolean IsConfigurationSection(String location)
     {
         return this.yamlConfigurationFile.isConfigurationSection(location);
+    }
+
+    @Override
+    public List<String> GetSectionNames(String location)
+    {
+        List<String> sectionNames = new ArrayList<>();
+        if(this.yamlConfigurationFile.isConfigurationSection(location))
+        {
+            sectionNames.addAll(
+                    this.yamlConfigurationFile.getConfigurationSection(location).getKeys(false));
+        }
+
+        return sectionNames;
     }
 }

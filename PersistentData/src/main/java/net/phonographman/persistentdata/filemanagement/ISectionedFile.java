@@ -4,6 +4,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * A file with storage and sections separated by a character
@@ -55,4 +56,11 @@ public interface ISectionedFile
      * @return True means the file exists
      */
     boolean FileExists();
+
+    /**
+     * Gets the section names within the given section
+     * @param location A section location
+     * @return A list of the section names
+     */
+    List<String> GetSectionNames(String location);
 }

@@ -6,6 +6,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 public class PersistentData implements IPersistentData
 {
@@ -75,5 +76,11 @@ public class PersistentData implements IPersistentData
         {
 
         }
+    }
+
+    @Override
+    public List<String> GetSectionNames(String location)
+    {
+        return this.actualData.GetSectionNames(location);
     }
 }

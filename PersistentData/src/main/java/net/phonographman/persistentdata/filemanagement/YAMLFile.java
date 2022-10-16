@@ -6,6 +6,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 
 import javax.management.AttributeNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class YAMLFile implements ISectionedFile
@@ -142,6 +143,17 @@ public class YAMLFile implements ISectionedFile
     public boolean FileExists()
     {
         return true;
+    }
+
+    /**
+     * Gets the section names within the given section
+     * @param location A section location
+     * @return A list of the section names
+     */
+    @Override
+    public List<String> GetSectionNames(String location)
+    {
+        return this.yamlConfiguration.GetSectionNames(location);
     }
 
     /**

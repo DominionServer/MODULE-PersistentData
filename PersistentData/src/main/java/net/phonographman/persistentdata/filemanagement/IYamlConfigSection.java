@@ -2,6 +2,8 @@ package net.phonographman.persistentdata.filemanagement;
 
 import org.bukkit.Location;
 
+import java.util.List;
+
 /**
  * A single section of the given YAML document
  */
@@ -35,4 +37,12 @@ public interface IYamlConfigSection
      * @return True means is a configuration section. False means either not or not valid
      */
     boolean IsConfigurationSection(String location);
+
+
+    /**
+     * Gets the section names within the given section
+     * @param location A section location
+     * @return A list of the section names
+     */
+    List<String> GetSectionNames(String location);
 }
