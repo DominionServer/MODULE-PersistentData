@@ -36,7 +36,7 @@ public class FileInterface implements IFileInterface
     @Override
     public void CreateDirectoriesForFileLocation()
     {
-        Path path = Paths.get(actualFile.getPath());
+        Path path = Paths.get(actualFile.getParentFile().getPath());
         try
         {
             Files.createDirectories(path);
