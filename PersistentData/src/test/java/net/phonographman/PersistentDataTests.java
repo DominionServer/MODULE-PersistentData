@@ -196,4 +196,60 @@ public class PersistentDataTests
         // Assert
         Assert.assertTrue((boolean) didReload.get());
     }
+
+    @Test
+    public void GetDataOrDefault_ReturnsDataFoundInLocation_WhenThereIsDataInLocationTest()
+    {
+        // Arrange
+        String testDocumentLocation = "MockLocation";
+        int expectedData = 5;
+        int defaultData = 0;
+
+        ISectionedFile mockSectionedFile = createNiceMock(ISectionedFile.class);
+        try
+        {
+            expect(mockSectionedFile.ReadData(testDocumentLocation)).andReturn(expectedData);
+        }
+        catch (AttributeNotFoundException e)
+        {
+
+        }
+        replay(mockSectionedFile);
+
+        IPersistentData testClass = new PersistentData(mockSectionedFile);
+
+        // Act
+        int actual = (int)testClass.GetDataOrDefault(testDocumentLocation, defaultData);
+
+        // Assert
+        Assert.assertEquals("Did not read data from location. ",expectedData, actual);
+    }
+
+    @Test
+    public void GetDataOrDefault_ReturnsDefaultData_WhenThereIsNoDataInLocationTest()
+    {
+        // Arrange
+        String testDocumentLocation = "MockLocation";
+        int defaultData = 0;
+
+        ISectionedFile mockSectionedFile = createNiceMock(ISectionedFile.class);
+        try
+        {
+            expect(mockSectionedFile.ReadData(testDocumentLocation))
+                    .andThrow(new AttributeNotFoundException());
+        }
+        catch (AttributeNotFoundException e)
+        {
+
+        }
+        replay(mockSectionedFile);
+
+        IPersistentData testClass = new PersistentData(mockSectionedFile);
+
+        // Act
+        int actual = (int)testClass.GetDataOrDefault(testDocumentLocation, defaultData);
+
+        // Assert
+        Assert.assertEquals("Did not return default. ",defaultData, actual);
+    }
 }

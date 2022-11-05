@@ -53,4 +53,12 @@ public interface IPersistentData
      * @return A list of the section names
      */
     List<String> GetSectionNames(String location);
+
+    /**
+     * Reads data from the storage within memory and if not found returns the default.
+     * @param location Location to look for the data.
+     * @param defaultData What to return if the data is not found.
+     * @return Data in the location or <i>defaultData</i> if not found.
+     */
+    Object GetDataOrDefault(String location, Object defaultData);
 }
