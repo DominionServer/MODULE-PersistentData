@@ -83,4 +83,20 @@ public class PersistentData implements IPersistentData
     {
         return this.actualData.GetSectionNames(location);
     }
+
+    @Override
+    public Object GetDataOrDefault(String location, Object defaultData)
+    {
+        Object data = defaultData;
+        try
+        {
+            data = this.ReadData(location);
+        }
+        catch (AttributeNotFoundException e)
+        {
+
+        }
+
+        return data;
+    }
 }
